@@ -30,7 +30,13 @@ pipeline {
             rm -rf gh-temp
             git clone --branch ${GH_BRANCH} ${REPO} gh-temp || \
               (git clone ${REPO} gh-temp && cd gh-temp && git checkout --orphan ${GH_BRANCH})
-            rsync -av --delete build/ gh-temp/
+
+            # delete old site files
+            rm -rf gh-temp/*
+
+            # copy new site files
+            cp -r build/* gh-temp/
+
             cd gh-temp
             git config user.email "jenkins@local"
             git config user.name "${GIT_USER}"
